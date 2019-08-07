@@ -1,25 +1,31 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import "./App.css";
+import { StateProvider } from "./stateManage";
+import { initialState, reducer } from "./stateManage/reducer";
+import { ApolloProvider } from "react-apollo-hooks";
+import client from "./apollo";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import Main from "./main";
+import Exam from "./main/exam";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ApolloProvider client={client}>
+      <StateProvider initialState={initialState} reducer={reducer}>
+        <Router>
+          <div className="App">
+            <div className="container">
+              <Switch>
+                <Route exact path="/" component={Main} />
+              </Switch>
+              <Switch>
+                <Route exact path="/exam/:id" component={Exam} />
+              </Switch>
+            </div>
+          </div>
+        </Router>
+      </StateProvider>
+    </ApolloProvider>
   );
 }
 
